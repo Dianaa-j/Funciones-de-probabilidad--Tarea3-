@@ -1,0 +1,876 @@
+---
+title: "Funciones de probabilidad para Diseño de Experimentos"
+author: "Diana Laura Javier Garcia"
+date: "10/10/2020"
+output:
+  word_document: default
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+# Distribución normal
+
+Definición: Variable X con función de densidad de probabilidad:
+
+$f(x)=\frac{1}{\sqrt{2 \pi \sigma}}e^{\frac{-(x-\mu)^{2}}{2 \sigma}}$
+
+Si *X* es una variable aleatoria con $E(X)=\mu$ y $V(X)=\sigma^{2}$, se define *Z* como: $Z=\frac{X-\mu}{\sigma}$. Así, se tiene la forma estándar:
+
+
+$f(z)=\frac{1}{\sqrt{2 \pi }}e^{\frac{-z^{2}}{2}}$
+
+
+
+## 4.43 Dada X una distribución normal con una media $\mu=10$ y una desviación estandar $\sigma^{2}=2$. Determinar las siguientes probabilidades.**
+
+En este ejercicio se calculará la probabilidad de una variable con  distribución normal, que tiene una media de 10 y una desviación estandar de 2. La probabilidad, del cero a la derecha, entre $x_1$ y $x_2$ está dada por: 
+
+$\int_{x=x_1}^{x=x_2} f(x) dx$
+
+Para hacer uso de tablas se calculará en cada caso el valor de z correspondiente a x: $Z=\frac{X-\mu}{\sigma}$
+
+### 4.43 (a) Probabilidades con tablas
+
+$\int_{x=x_1}^{x=x_2} f(x) dz$
+
+(a) P(X<13)=$\int_{x=-\infty}^{x=13} f(x) dx$=
+           =P(Z<$\frac{13-10}{2}$)=P(Z<1.5)=0.5+0.4332=0.9332
+           
+           Ver Figura la intersección de la fila 1.5 y la columna 0 (amarillo)
+
+(b) P(X>9)=$\int_{x=9}^{x=\infty}f(x)dx$
+          =P(Z>$\frac{9-10}{2}$=P(z>-0.5)=P(Z=0.5)+0.5=0.1915+0.5=0.6915
+          
+          Ver Figura la intersección de la fila 0.5 y la columna 0 (color rosa)
+
+(c) P(6<X<14)=$\int_{x=6}^{x=14}f(x)dx$
+         =P(X>6)+P(X<2)=P(Z>$\frac{6-10}{2}$)+P(Z<$\frac{14-10}{2}$)=P(X>-2)+P(Z<2)=0.4772+0.4772=0.9544$
+         
+         Ver Figura la intersección de la fila 2.0 la columna 0 (color rosa claro)
+
+(d) P(2<X<4)=$\int_{x=2}^{x=4}f(x)dx$
+          =P(X>2)+P(X<4)=P(Z>$\frac{2-10}{2}$)+P(Z<$\frac{4-10}{2}$)=P(Z>-4)+P(Z<-3)=0.5-0.4987=0.013
+          
+          Ver Figura la intersección de la fila 3.0 y la columna 0 (color verde) y la fila 3.9 y la columna 0.99 (color verde)
+
+(e) P(-2<X<8)=$\int_{x=-2}^{x=8}f(x)dx$}
+          =P(x>-2)+P(X<8)=P(X>$\frac{-2+10}{2}$)+P(Z<$\frac{8+10}{2}$)=P(Z>-1)+P(Z<-6)=P(Z=6)-P(Z=1)=0.5-0.3413=0.1587
+          
+          Ver Figura la intersección de la fila 1.0 y la columna 0 (color azul)
+
+Tablas: 
+
+```{r out.width="400px"}
+ knitr::include_graphics("tab1.png" )
+
+```
+
+
+### 4.43 (b) Resultados con R
+
+Para obtener los resultados en R se emplea la instrucción: 
+
+# ```{r}
+# pnorm(q, mean=0, sd=1, lower.tail = TRUE o FALSE)
+# ```
+
+Donde,q es el cuantil, mean es la media=10, sd es la desviación estandar =2 y según el caso se empleara la cola izquierda (lower.tail=TRUE), o la cola derecha (lower.tail=FALSE)
+
+
+(a) P(X<13)=$\int_{x=-\infty}^{x=13} f(x) dx$ (Tomando la cola izquierda)
+```{r}
+pnorm(13,10,2)
+```
+
+(b) P(X>9)=$\int_{x=9}^{x=\infty}f(x)dx$ (Tomando la cola derecha)
+```{r}
+pnorm(9,10,2,lower.tail = FALSE)
+```
+(c) P(6<X<14)=$\int_{x=6}^{x=14}f(x)dx$=$\int_{x=0}^{x=14}f(x)dx$-$\int_{x=0}^{x=6}f(x)dx$ (Tomando la cola izquierda)
+```{r}
+pnorm(14,10,2)-pnorm(6,10,2)
+```
+
+(d) P(2<X<4)=$\int_{x=2}^{x=4}f(x)dx$=$\int_{x=0}^{x=4}f(x)dx$-$\int_{x=0}^{x=2}f(x)dx$ (Tomando la cola izquierda)
+```{r}
+pnorm(4,10,2)-pnorm(2,10,2)
+```
+
+(e) P(-2<X<8)=$\int_{x=-2}^{x=8}f(z)dz$}=$\int_{x=0}^{x=8}f(x)dx$-$\int_{x=0}^{x=-2}f(x)dx$ (Tomando la cola izquierda)
+```{r}
+pnorm(8,10,2)-pnorm(-2,10,2)
+```
+Como se puede observar, los valores obtenidos por el método de tablas y por instrucciones en R proporcionan los mismos resultados por una variación de decimales o milesimas. 
+
+## 4.44 Si *X* es variable con distribución normal con media $\mu=10$ y desviación estandar $\sigma=2$. Determine el valor x para el cual  se cumple lo siguiente
+
+### 4.44 (a) Solución con tablas
+
+En este ejercicio se pide determinar el valor x, para el cual se tiene una determinada probabilidad, tomando cuenta que la media es $\mu=10$ y desviación estandar es $\sigma=2$, es decir:
+
+$P[X>z]=\int_{x=0}^{x=\infty} f(x) dx$
+
+Para ello se tomará en cuenta la relación de normalización entre z y x: 
+
+ $Z=\frac{X-\mu}{\sigma}$
+ 
+El método aplicado en los siguientes incisos consiste en resolver la ecuación $Z=\frac{X-\mu}{\sigma}=P(z)$ y despejar x. 
+ 
+
+Consultando las tablas, 
+
+(a) P(Z>x)=0.5= $P[X>z]=\int_{x=0}^{x} f(x) dx=0.5$
+              => P(Z=0)=0.5 => $z=\frac{x-10}{2}=0$ => x=10
+              
+
+(b) P(X>x)=0.95= $P[X>z]=\int_{x=0}^{x} f(x) dx=0.95$
+              => P(Z=-1.645)=>0.95 => $z=\frac{x-10}{2}=-1.650$ => x=6.69
+
+(c) P(x<X<10)=0.2=$P[X>z]=\int_{x}^{x=10} f(x) dx=0.2$
+              => P(z<$\frac{10-10}{2}$)-P(z<$\frac{x-10}{2}$)=P(z<0)-P(z<$\frac{x-10}{2}$)=0.5-P(z<$\frac{x-10}{2}$)=0.2               => P(z<$\frac{x-10}{2}$)=-0.2+0.5=0.3 => $z=\frac{x-10}{2}$=-0.52 => x=8.96
+
+(d) P(-x<X-10<x)=0.95 
+
+Resolviendo la desigualdad: P(-x<X-10<x)=P(-x+10<X<x+10)=0.950=-P($\frac{(-x+10)-10}{2}$<z)+P($\frac{(x+10)-10}{2}$)<z)
+
+P($\frac{(-x+10)-10}{2}$<z)
+
+=>P($\frac{-x}{2}<z)=0.95+0.0025=0.975 donde z=1.96 
+
+=>$\frac{(x}{2}=1.96$ => x=3.92
+ 
+
+### 4.44 (b) Solución con R
+
+Para obtener los resultados en R se empleará la instrucción:
+
+# ```{r}
+# qnorm(p,mean=0,sd=1, lower.tail = TRUE, log.p=FALSE)
+# ```
+
+Donde, p es el punto a determinar, mean es la media =10 y sd es la desviación estandar igual a 2. Por default, la instrucción trabaja con la cola izquierda, por ello para trabajar con la cola derecha se debe escribir lower.tail=FALSE.
+
+
+(a) P(Z>x)=0.5= $P[X>z]=\int_{x=0}^{x} f(x) dx=0.5$ (Tomando la cola izquierda)
+
+```{r}
+qnorm(0.5,10,2)
+```
+
+(b) P(X>x)=0.95= $P[X>z]=\int_{x=0}^{x} f(x) dx=0.95$ (Tomando la cola derecha)
+
+```{r}
+qnorm(0.95,10,2,lower.tail = FALSE)
+```
+(c) P(x<X<10)=0.2=$P[X>z]=\int_{x}^{x=10} f(x) dx=0.2$ (tomando la cola izquierda)
+
+```{r}
+qnorm(0.3,10,2)
+```
+
+## 4.60 El peso de corredor esta distribuido normalmente con una media de 12 onza y una desviación estandar de 0.5 onzas.**
+
+(a)¿Cuál es la probabilidad de que el peso sea de más de 13 onzas?
+El problema nos dice que se trata de una distribución normal con una media de 12 y una desviación de 0.5. Se debe encontrar la probabilidad de tener valores mayores a 13, por ello se debe resolver lo siguiente:
+
+P(x>13)=$\int_{x=13}^{x=\infty} f(x) dx$
+
+=P(Z>$\frac{13-12}{0.5}$)=P(>2)=0.5-0.4772=0.0228=2.28% (LA resta se hace porque que se consultó la tabla con la cola izquierda)
+
+
+Para obtener los resultados en R se empleará la instrucción:
+
+# ```{r}
+# pnorm(q,mean=0,sd=1,lower.tail = TRUE, log.p = False)
+#  ```
+
+Donde, q es el punto a evaluar, mean es la media =12 y sd es la desviación estandar igual a 0.5. Por default, la instrucción trabaja con la cola izquierda. En este ejercicio se debe trabajar con la cola derecha ya que se piden la probabilidad para los puntos mayores a 13, por ellos se debe escribir lower.tail=FALSE.
+
+```{r}
+pnorm(13,12,0.5,lower.tail = FALSE)
+```
+(b) ¿Cuál es la desviación estandar cuando el 99.9% del peso es menos de 13 onzas?
+Se debe cumplir la ecuación: P(x<13)=0.999
+
+=P(Z<$\frac{13-12}{\sigma}$)=0.999
+
+=> P(Z<$\frac{1}{\sigma}$)=0.999-0.5=0.499 => P(z=3.08)=0.499 =>$z=\frac{1}{\sigma}=3.08$
+
+=> $\sigma$=0.3246
+
+Para comprobar que el resultado obtenido con tablas es correcto, se debe cumplir:
+
+P(x<13)=P(z<$\frac{13-12}{0.3246}$)=0.999
+
+```{r}
+pnorm(13,12,0.3246)
+```
+
+(c) Si la desviación estandar es 0.5 onzas, ¿cuál debe ser la media tal que la probabilidad de que los zapatos de menos de 13 onzas sea del 99.9?
+Se debe cumplir la ecuación: P(x<13)=0.999
+
+=P(Z<$\frac{12-\mu}{0.5}$)=0.999
+
+=> P(Z<$\frac{13-\mu}{0.5}$)=0.999-0.5=0.499 => $z=\frac{13-\mu}{0.5}=3.08$
+
+Despejando $\mu$ de la ecuación anterior
+
+=>$\mu=-(3.08*0.5)+13=11.46
+
+=> $\mu=11.46$
+
+
+Para comprobar que el resultado obtenido con tablas es correcto, se debe corroborar que P(x<13)=P(z<$\frac{13-11.46}{0.5}$)=0.999
+
+```{r}
+pnorm(13,12,0.3246)
+```
+A partir de los resultados presentados con ecuaciones y con instrucciones en R, se observa que estos coinciden. Además se pudo corroborar. 
+
+# Distribución t de Student 
+
+Función de densidad de la distribución de Student es: 
+
+$f(t_{n})=\frac{1}{\sqrt{n\pi}} \frac{\Gamma (\frac{n+1}{n})}{\Gamma \frac{n}{2}} \frac{1}{(1+\frac{t^{2}}{n})^{\frac{n+1}{n}}}$
+
+
+## 28. Determina los valores de las siguientes cantidades
+
+
+### 28 (a) Por tablas $t_{\alpha, \nu}$
+
+En los siguientes incisos se calcula el quantil $t_{\alpha, \nu}$ para una muestra de $\nu$+1 observaciones y probabilidad $P(t>t_{\alpha, \nu})=\alpha$
+
+$P(T>t_{\alpha, \nu})=\int_{\alpha, \nu}^{\infty} f(t) dt$
+
+En los incisos (a) y (b) se determina el valor estadistico  t para una muestra de 16 observaciones con una probabilidad de 0.1 y 0.05 respectivamente. 
+
+(a) $t_{0.1,15}$=> P($t_{0.1,15}$)=$\int_{0.1,15}^{\infty} f(t) dt$=0.1
+    => t= 1.341 
+
+  Ver en la tabla la intersección entre la fila $\nu$ igual a 15 y  $\alpha$ igual a 0.1 (color rojo)
+
+(b) $t_{0.05,15}$=> P($t_{0.05,15}$)=$\int_{0.05,15}^{\infty} f(t)dt$=0.05
+    =>t= 1.753
+
+Ver en la tabla la intersección entre la fila $\nu$ igual a 15 y  $\alpha$ igual a 0.05 (color amarillo)
+
+
+En el inciso (c) se  determina el valor estadistico  t para una muestra de 26 observaciones con una probabilidad de 0.05 
+
+(c) $t_{0.05,25}$=> P($t_{0.05,25}$)= $\int_{0.05,25}^{\infty} f(t)dt$=0.05
+    =>t=1.708
+
+Ver en la tabla la intersección entre la fila $\nu$ igual a 25 y  $\alpha$ igual a 0.05 (color verde)
+
+En los incisos (d) y (e) se  determina el valor estadistico  t para una muestra de 41 observaciones con una probabilidad de 0.05  y 0.005 respectivamente.
+
+(d) $t_{0.05,40}$=> P($t_{0.05,40}$)= $\int_{0.05,40}^{\infty} f(t)dt$=0.05
+  => t=1.684
+
+Ver en la tabla la intersección entre la fila $\nu$ igual a 40 y  $\alpha$ igual a 0.05 (color gris)
+
+(e) $t_{0.005,40}$=P($t_{0.005,40}$)= $\int_{0.005,40}^{\infty} f(t)dt$=0.005
+  => t=2.704
+
+Ver en la tabla la intersección entre la fila $\nu$ igual a 40 y  $\alpha$ igual a 0.05 (color morado)
+
+
+Tablas: 
+
+```{r out.width="600px"}
+ knitr::include_graphics("tab2.png")
+
+```
+
+### 28 (b) Con R
+
+Para determinar los valores estadisticos para los cuales la probabilidad a la derecha es $\alpha$ se emplea la instrucción 
+
+# ```{r}
+# qt(p,df,ncp,lower.tail = TRUE, log.p=FALSE)
+# ```
+
+Donde p es la probabilidad $\alpha$, df es igual a $\nu$ y se dado que se trabaja con la probabilidad de la derecha se debe escribir " lower.tail = FALSE".
+
+En los incisos (a) y (b) se calcula el valor estadistico para el cual la probabilidad $\alpha$ a la derecha es 0.1 y 0.05 respectivamente y $\nu$ es 15 en ambos casos (número de  observaciones igual a 16).
+
+(a) $t_{0.1,15}$=> P(T>$t_{0.1,15}$)=$\int_{0.1,15}^{\infty} f(t) dt$=0.1
+
+```{r}
+qt(0.1,15,lower.tail = FALSE)
+```
+
+(b) $t_{0.05,15}$=> P(T>$t_{0.05,15}$)=($\int_{0.05,15}^{\infty} f(t)dt$=0.05
+
+```{r}
+qt(0.05,15,lower.tail = FALSE)
+```
+
+En el inciso (c) se calcula el valor estadistico para el cual la probabilidad $\alpha$ a la derecha es 0.05 y $\nu$ es 25 (número de observaciones=16)
+
+(c) $t_{0.05,25}$=> P(T>$t_{0.05,25}$)=$\int_{0.05,25}^{\infty} f(t)dt$=0.05
+
+```{r}
+qt(0.05,25,lower.tail = FALSE)
+```
+En el inciso (d) se calcula el valor estadistico para el cual la probabilidad $\alpha$ a la derecha es 0.05 y $\nu$ es 40 (número de observaciones=41)
+
+(d) $t_{0.05,40}$=> P(T>$t_{0.05,40}$)=$\int_{0.05,40}^{\infty} f(t)dt$=0.05
+
+```{r}
+qt(0.05,40,lower.tail = FALSE)
+```
+En el inciso (e) se calcula el valor estadistico para el cual la probabilidad $\alpha$ a la derecha es 0.005 y $\nu$ es 40 (número de observaciones=41)
+
+(e) $t_{0.005,40}$=> P(T>$t_{0.005,40}$)=$\int_{0.005,40}^{\infty} f(t)dt$=0.005
+
+```{r}
+qt(0.005,40,lower.tail = FALSE)
+```
+
+## 29. Determina el valor critico *t* para los siguientes casos:
+
+
+### 29(a) Por tablas
+
+Tomando en cuenta que central area representa la probabilidad, es este ejercicio se calcula el valor estadistico para el cual la probabilidad $\alpha$ a la izquierda es **central area** y $\nu$ es df (número de observaciones=df+1). Dado que las tablas están en función de la probabilidad  a la derecha, se debe hacer el calculo $1-\alpha$ para obtener la probabilidad a la derecha. 
+
+En los incisos (a), (b), (c),(d) se debe tomar en cuenta la simetría de la distribución.
+
+(a) Central area=0.95, df=10 (11 observaciones con una distribución t de Student, y probabilidad 0.95)
+
+Observación: $1-\alpha=1-0.95=0.05$ => $\alpha=0.05/2=0.025$ 
+
+Ver tabla columna $\nu$=10 y $\alpha$=0.025 (color amarillo)
+
+=> $t_{0.025,10}$=2.228
+
+(b) Central area=0.95, df=20 (21 observaciones con una distribución t de Student, y probabilidad 0.95)
+
+Observación: $1-\alpha=1-0.95=0.05$ => $\alpha=0.05/2=0.025$ 
+
+=> $t_{0.025,20}$=2.086
+
+Ver tabla columna $\nu$=20 y $\alpha$=0.025 (color roj)
+
+(c) Central area=0.99, df=20 (21 observaciones con una distribución t de Student, y probabilidad 0.99)
+ 
+ Observación: $1-\alpha=1-0.99=0.01$ => $\alpha=0.01/2=0.005$ 
+ 
+=> $t_{0.005,20}$=2.845
+
+ Ver tabla columna $\nu$=20 y $\alpha$=0.005 (color azul)
+
+(d) Central area=0.99, df=50 (51 observaciones con una distribución t de Student, y probabilidad 0.99)
+ 
+ Observación: $1-\alpha=1-0.99=0.01$ => $\alpha=0.01/2=0.005$ 
+
+=> $t_{0.005,50}$=2.682 (este valor se obtuvo interpolando, ver figura)
+
+ Ver tabla columna $\nu$=50 y $\alpha$=0.005 (color verde oscuro)
+ 
+ ```{r out.width="400px"}
+ knitr::include_graphics("interpolacio.png")
+
+```
+
+
+(e) Upper-tail area=0.01, df=25 (26 observaciones con una distribución t de Student, y probabilidad 0.01 a la derecha)
+
+Observación: $\alpha=0.01$ 
+
+=> $t_{0.01,25}$=2.485
+
+Ver tabla columna $\nu$=25 y $\alpha$=0.005 (color verde oscuro)
+
+(f) Lower-tail area=0.025, df=5 (5 observaciones con una distribución t de Student, y probabilidad 0.025)
+
+Observación: $\alpha=0.025$ 
+
+
+=> $t_{0.025,5}$=-2.571
+
+Ver tabla columna $\nu$=5 y $\alpha$=0.025 (color azul oscuro)
+
+Tablas: 
+
+```{r out.width="400px"}
+ knitr::include_graphics("tab3.png")
+
+```
+
+### 2.29 (b) Con R. 
+
+Para corroborar los resultados anteriores se debe cumplir $t_{\alpha, \nu}=$ central área. Para determinar los valores estadisticos para los cuales la probabilidad a la derecha es $\alpha$ se emplea la instrucción 
+
+# ```{r}
+# qt(p,df,ncp,lower.tail = TRUE, log.p=FALSE)
+# ```
+
+Donde p es la probabilidad $\alpha$, df es igual a $\nu$ y se dado que se trabaja con la probabilidad de la derecha se debe escribir " lower.tail = FALSE".
+
+
+
+
+(a) $t_{0.025,10}$=> P(T>$t_{0.025,10}$)=$\int_{0.025,10}^{\infty} f(t)dt$=0.025 (Valor estadistico para el cual la probabilidad $\alpha$  es 0.025 y $\nu$ es 10 en ambos casos (número de  observaciones igual a 11))
+
+```{r}
+qt(0.975,10)
+```
+(b) $t_{0.025,20}$=> P(T>$t_{0.025,20}$)=$\int_{0.025,20}^{\infty} f(t)dt$=0.025 (Valor estadistico para el cual la probabilidad $\alpha$  es 0.025 y $\nu$ es 20 en ambos casos (número de  observaciones igual a 21).)
+
+```{r}
+qt(0.975,20)
+```
+(c)  $t_{0.995,20}=> P(T>t_{0.995,20})$=$\int_{0.995,10}^{\infty} f(t)dt$=0.995 (Valor estadistico para el cual la probabilidad $\alpha$  es 0.995 y $\nu$ es 20 en ambos casos (número de  observaciones igual a 21).
+
+```{r}
+qt(0.995,20)
+```
+(d) $t_{0.995,50}$=> $P(T>t_{0.995,50})=\int_{0.995,50}^{\infty} f(t)dt=0.995$ (Valor estadistico para el cual la probabilidad $\alpha$  es 0.995 y $\nu$ es 50 en ambos casos (número de  observaciones igual a 51).)
+```{r}
+qt(0.995,50)
+```
+(e) $t_{0.005,20}$=> $P(T>t_{0.005,20})=\int_{0.005,20}^{\infty} f(t)dt=0.005$ (Valor estadistico para el cual la probabilidad $\alpha$ a la derecha es 0.005 y $\nu$ es 20 en ambos casos (número de  observaciones igual a 21).)
+
+```{r}
+qt(0.01,25,lower.tail = FALSE)
+```
+
+(f) $t_{0.025,5}$= > $P(T>t_{0.025,5})=\int_{0.025,5}^{\infty} f(t)dt=0.05$ (Valor estadistico para el cual la probabilidad $\alpha$ a la derecha es 0.025 y $\nu$ es 5 en ambos casos (número de  observaciones igual a 6).)
+
+```{r}
+qt(0.025,5)
+```
+
+Comparando los resultados obtenidos con las instrucciones en R, se observa que estos coinciden con los obtenidos mediante tablas. 
+
+
+# Distribución $X^{2}$ de Pearson
+
+La distribución que sigue la v.a. *X* se le denomina *Distribución $X^{2}$ de Pearson con $n=\nu+1$ grados de libertad y se denota:
+
+X-> $X^{2}$ con función de densidad:
+
+$f(x)=\frac{1}{2^{\frac{n}{2}} \Gamma (\frac{n}{2})}e^{\frac{-x}{2}}x^{(\frac{n}{2})-1}$
+
+## 42. Determine los valores de las siguientes cantidades $X^{2}_{\alpha,\nu}$ 
+
+
+$P[X_n^2>X_{\alpha,\nu}^2]$=$\int_{X_{\alpha,\nu}^2}^{\infty}f(x)dx$
+
+### 42 (a) Por tablas 
+
+
+
+(a) $X^{2}_{0.1,15}$=> $P(X_n^2>X^{2}_{0.1,15})=\int_{X_{0.1,15}^2}^{\infty}f(x)dx$=0.1
+=> X=22.31
+
+(Valor estadistico para el cual la probabilidad $\alpha$ es 0.1 y $\nu$ es 15, es decir, número de  observaciones igual a 16).
+Ver Tabla fila $\nu$ igual a 15 y columna $\alpha$= 0.1 (color azul)
+
+(b) $X^{2}_{0.1,25}$==> $P(X_n^2>X^{2}_{0.1,25})=\int_{X_{0.1,25}^2}^{\infty}f(x)dx$=0.1
+=> x=34.28
+
+(Valor estadistico para el cual la probabilidad $\alpha$ es 0.1 y $\nu$ es 25, es decir, número de  observaciones igual a 26).
+Ver Tabla fila $\nu$ igual a 25 y columna $\alpha$= 0.1 (color rojo)
+
+
+(c) $X^{2}_{0.01,25}$=> $P(X_n^2>X^{2}_{0.01,25})=\int_{X_{0.01,25}^2}^{\infty}f(x)dx$=0.01
+=>x= 44.31
+
+(Valor estadistico para el cual la probabilidad $\alpha$ es 0.01 y $\nu$ es 25, es decir, número de  observaciones igual a 26).
+Ver Tabla fila $\nu$ igual a 25 y columna $\alpha$= 0.01 (color verde)
+
+
+(d) $X^{2}_{0.005,25}$=> $P(X_n^2>X^{2}_{0.005,25})$=$\int_{X_{0.005,25}^2}^{\infty}f(x)dx$=0.005
+=>x=46.93
+
+(Valor estadistico para el cual la probabilidad $\alpha$ es 0.005 y $\nu$ es 25, es decir, número de  observaciones igual a 26).
+Ver Tabla fila $\nu$ igual a 25 y columna $\alpha$= 0.005 (color morado)
+
+
+(e) $X^{2}_{0.99,25}$=> $P(X_n^2>X^{2}_{0.99,25})=\int_{X_{0.99,25}^2}^{\infty}f(x)dx$=0.99
+=> x=11.52
+
+(Valor estadistico para el cual la probabilidad $\alpha$ es 0.99 y $\nu$ es 25, es decir, número de  observaciones igual a 26).
+Ver Tabla fila $\nu$ igual a 25 y columna $\alpha$= 0.99 (color amarillo)
+
+
+(f) $X^{2}_{0.995,25}$=> $P(X_n^2>X^{2}_{0.995,25})=\int_{X_{0.995,25}^2}^{\infty}f(x)dx$= 0.995
+=> x=10.52
+
+(Valor estadistico para el cual la probabilidad $\alpha$ es 0.995 y $\nu$ es 25, es decir, número de  observaciones igual a 26).
+Ver Tabla fila $\nu$ igual a 25 y columna $\alpha$= 0.995 (color rosa)
+
+
+Tablas: 
+
+```{r out.width="600px"}
+ knitr::include_graphics("tab4.png")
+
+```
+
+### 42 (b) Evaluando con R 
+
+Para determinar el Valor estadistico con una probabilidad $\alpha$ y número de observaciones=$\nu$+1 se emplea la instrucción:
+
+
+# ```{r}
+# qchisq(p,df,ncp=0,lower.tail = TRUE,log.p=FALSE)
+# ```
+Donde p es la probabilidad $\alpha$, df es el numero de grados $\nu=n-1$. Dado que interesa conocer el lado derecho de la curva, se debe escribir "lower.tail = FALSE".
+
+
+(a) $X^{2}_{0.1,15}$=> $P(X_n^2>X^{2}_{0.1,15})=\int_{X_{0.1,15}^2}^{\infty}f(x)dx$=0.1
+
+```{r}
+qchisq(0.1,15,lower.tail = FALSE)
+```
+(Valor estadistico para el cual la probabilidad $\alpha$ es 0.1 y $\nu$ es 15, es decir, número de  observaciones igual a 16).
+
+
+(b) $X^{2}_{0.1,25}$=> $P(X_n^2>X^{2}_{0.1,25})=\int_{X_{0.1,25}^2}^{\infty}f(x)dx$=0.1
+
+```{r}
+qchisq(0.1,25,lower.tail = FALSE)
+```
+(Valor estadistico para el cual la probabilidad $\alpha$ es 0.1 y $\nu$ es 25, es decir, número de  observaciones igual a 26).
+
+(c) $X^{2}_{0.01,25}$=> $P(X_n^2>X^{2}_{0.01,25})=\int_{X_{0.01,25}^2}^{\infty}f(x)dx$=0.01
+
+```{r}
+qchisq(0.01,25,lower.tail = FALSE)
+```
+(Valor estadistico para el cual la probabilidad $\alpha$ es 0.01 y $\nu$ es 25, es decir, número de  observaciones igual a 26).
+
+
+(d) $X^{2}_{0.005,25}$=> $P(X_n^2>X^{2}_{0.005,25)}=\int_{X_{0.005,25}^2}^{\infty}f(x)dx$=0.005
+
+```{r}
+qchisq(0.005,25,lower.tail = FALSE)
+```
+(Valor estadistico para el cual la probabilidad $\alpha$ es 0.005 y $\nu$ es 25, es decir, número de  observaciones igual a 26).
+
+
+(e) $X^{2}_{0.99,25}$=> $P(X_n^2>X^{2}_{0.99,25})=\int_{X_{0.99,25}^2}^{\infty}f(x)dx$=0.99
+
+```{r}
+qchisq(0.99,25,lower.tail = FALSE)
+```
+(Valor estadistico para el cual la probabilidad $\alpha$ es 0.99 y $\nu$ es 25, es decir, número de  observaciones igual a 26).
+
+
+(f) $X^{2}_{0.995,25}$=> $P(X_n^2>X^{2}_{0.995,25})=\int_{X_{0.995,25}^2}^{\infty}f(x)dx$= 0.995
+```{r}
+qchisq(0.995,25,lower.tail = FALSE)
+```
+(Valor estadistico para el cual la probabilidad $\alpha$ es 0.995 y $\nu$ es 25, es decir, número de  observaciones igual a 26).
+
+
+## 43. Determine lo siguiente
+
+
+### 43 (a) Por Tablas P[$X^{2}>=P$]
+
+En los incisos (a) y (b) se busca el valor estadistico para el cual la probabilidad $\alpha$ es 0.95 y 0.05  y $\nu$ es 10, es decir, número de observaciones igual a 11. Se consulto la tabla con valores percentiles a la izquierda.
+
+
+(a) El 95 percentil de la distribución ji cuadrada con $\nu=10$=  18.3
+
+ $X^{2}_{0.95,10}$=> $P(X_n^2>X^{2}_{0.95,10})=\int_{X_{0.95,10}^2}^{\infty}f(x)dx$=0.95
+
+Ver Tabla fila $\nu$ igual a 10 y columna $\alpha$= 0.95 (color azul)
+
+
+(b) El 5 percentil de la distribución ji cuadrada con $\nu=10$= 3.94
+
+ $X^{2}_{0.05,10}$=> $P(X_n^2>X^{2}_{0.05,10})=\int_{X_{0.05,10}^2}^{\infty}f(x)dx$=0.05
+ 
+Ver Tabla fila $\nu$ igual a 10 y columna $\alpha$= 0.05 (color rosa)
+
+
+(c) P($10.98 <= X^2 <= 36.78$), donde $X^2$ es una variable aleatoria ji cuadrada con $\nu=22$
+
+=> P($10.98 <= X^2 <= 36.78$)=P(X^2 <= 36.78$)-P($X^2 <= 10.98)=0.975-0.025=0.95
+
+Ver Tabla fila $\nu$ igual a 22 y columna $\alpha$= 0.9751 y $\alpha$= 0.025 (color rojo)
+
+Tablas 
+
+```{r out.width="600px"}
+ knitr::include_graphics("tab5.png")
+
+```
+
+(d) P($X^2<14.611$ o $X^2>37.652$), $\nu=25$= P($X^2<14.611$) + P($X^2>37.652$)=0.05+0.05=0.1
+
+Ver Tabla fila $\nu$ igual a 25 y columna $\alpha$= 0.05 (color amarillo) y $\alpha$= 0.025 (color amarillo)
+
+
+```{r out.width="400px"}
+ knitr::include_graphics("tab6.png")
+
+```
+
+
+### 43 (b) Cálculo con R 
+
+Para determinar el Valor estadistico con una probabilidad $\alpha=\frac{númeropercentil}{100}$ y número de observaciones=$\nu$+1 se emplea la instrucción:
+
+
+# ```{r}
+# qchisq(p,df,ncp=0,lower.tail = TRUE,log.p=FALSE)
+# ```
+
+Donde p es la probabilidad $\alpha$, df es el numero de grados $\nu=n-1$. Dado que interesa conocer el lado izquierdo de la curva, no se debe escribir "lower.tail = FALSE". 
+
+
+(a) El 95 percentil de la distribución ji cuadrada con $\nu=10$=  18.3
+
+ $X^{2}_{0.95,10}$=> $P(X_n^{2}>X^{2}_{0.95,10})=\int_{X_{0.95,10}^2}^{\infty}f(x)dx$=0.95
+
+```{r}
+qchisq(0.95,10)
+```
+
+(b) El 5 percentil de la distribución ji cuadrada con $\nu=10$= 3.94
+
+ $X^{2}_{0.05,10}$=> $P(X_n^2>X^{2}_{0.05,10})=\int_{X_{0.05,10}^2}^{\infty}f(x)dx$=0.05
+
+```{r}
+qchisq(0.05,10)
+```
+En los incisos (c) y (d) se busca el valor de P para la variable aleatoria ji cuadrada con $\nu=22$ entre los valores $x_1$ y $x_2$. 
+
+(c) P($10.98 <= X^2 <= 36.78$)=  
+```{r}
+pchisq(36.78,22)-pchisq(10.98,22)
+```
+
+
+(d) P($X^2<14.611$ o $X^2>37.652$), $\nu=25$= P($X^2<14.611$) + P($X^2>37.652$)
+
+```{r}
+pchisq(14.611,25)+pchisq(37.652,25, lower.tail = FALSE)
+```
+
+# Distribución F de Snedecor
+
+
+Se define la variable aleatoria F-Snedecor como el cociente: 
+
+$F=\frac{\frac{X_1}{\nu_1}}{\frac{X_2}{\nu_2}}$
+ 
+ 
+Donde, $X_1$,$X_2$ son dos variables aleatorias independientes entre sí. Además, F se distribuye según una F-Snedecor con $\nu_1$ y $\nu_2$ grados de libertad.  
+
+$P(X_n^2>X^{2}_{0.99,25})=\int_{X_{0.99,25}^2}^{\infty}f(x)dx$
+
+
+## 57. Obtener las siguientes cantidades** $F_{\alpha,n_1,n_2}$
+
+### 57 (a) Por tablas**
+
+(a) $F_{0.05,5,8}$=> $P(F>F_{0.05,5,8})=\int_{F_{0.05,5,8}}^{\infty}f(f)df$=0.05
+=> F=3.694
+
+Valor estadistico para el cual la probabilidad $\alpha$ es 0.05 y $\nu_1$ es 5 y $\nu_2$ es 8, es decir, muestras de tamaño 6 y 9.
+Ver tabla columna $\nu_1$ igual a 5 y fila $\nu_2$ igual a 8 (color rosa)
+
+(b) $F_{0.05,8,5}$=> $P(F>F_{0.05,8,5})=\int_{F_{0.05,8,5}}^{\infty}f(f)df$= 0.05
+=> F=4.82
+
+Valor estadistico para el cual la probabilidad $\alpha$ es 0.05 y $\nu_1$ es 8 y $\nu_2$ es 5, es decir, muestras de tamaño 9 y 6.
+Ver tabla columna $\nu_1$ igual a 8 y fila $\nu_2$ igual a 5 (color naranja)
+
+
+(c) $F_{0.95,5,8}$=> $\frac{1}{F_{0.05,5,8}}=\frac{1}{3.694}$
+=> F=0.271
+
+(Valor estadistico para el cual la probabilidad $\alpha$ es 0.95 y $\nu_1$ es 5 y $\nu_2$ es 8, es decir, muestras de tamaño 6 y 9.
+Ver tabla columna $\nu_1$ igual a 5 y fila $\nu_2$ igual a 8 (color rosa)
+
+
+
+(d) $F_{0.95,8,5}$= $\frac{1}{F_{0.05,8,5}}=\frac{1}{4.82}$=0.274
+
+(Valor estadistico para el cual la probabilidad $\alpha$ es 0.95 y $\nu_1$ es 8 y $\nu_2$ es 5, es decir, muestras de tamaño 9 y 6.
+Ver tabla columna $\nu_1$ igual a 8 y fila $\nu_2$ igual a 5 (color rosa)
+
+
+Tabla
+
+
+```{r out.width="600px"}
+ knitr::include_graphics("tabF1.png")
+
+```
+
+(e) El 99 percentil de F con $\nu_{1}$=10 y $\nu_{2}=12$
+
+  =>$F_{0.99,10,12}$=$\frac{1}{F_{0.01,10,12}}=\frac{1}{4.30}$=0.23
+  
+(f) El 1 percentil de F con $\nu_{1}$=10 y $\nu_{2}=12$
+
+  =>$F_{0.01,10,12}$=4.30
+  
+  
+Tabla
+
+
+```{r out.width="400px"}
+ knitr::include_graphics("tabF2.png")
+
+```
+  
+(g) P(F>6.16), $\nu_{1}$=6 y $\nu_{4}$ Se busca en las tablas la que tenga en la intersección de los valores 6 y 4 el resultado de 6.16
+
+Corresponde a $f=0.05$, es decir: $f_{0.05,6,4}$=6.16
+
+Tabla 
+
+
+```{r out.width="600px"}
+ knitr::include_graphics("tabF3.png")
+
+```
+
+(h) P($0.177<F<4.74$) para $\nu_{1}$=10 y $\nu_{2}=5$
+
+  =>Se busca en las tablas la que en la intersección entre de $\nu_{1}$=10 y $\nu_{2}=5$ de 0.177 y 4.74
+  
+  => P($0.177<F<4.74$)=P($F<4.74$)-P($F<0.177$)=0.05+0.01=0.06
+
+Tabla
+
+```{r out.width="600px"}
+ knitr::include_graphics("tabF4.png")
+```
+
+### 57 (b) Con R
+
+
+Para determinar el Valor estadistico con una probabilidad $\alpha$ y grados de libertad $\nu_1$ y $\nu_2$, es decir, muestras de tamaño  $\nu_1+1$ y $\nu_2+2$ se emplea la siguiente instrucción:
+
+
+#```{r}
+#qf(p,df1,df2,ncp, lower.tail = TRUE, log.p = FALSE)
+#```
+
+
+Donde p es la probabilidad $\alpha$, df1 es el numero de grados $\nu_1=n-1$ y df2 es el numero de grados $\nu_2=n-1$. Dado que interesa conocer el lado derecho de la curva, se debe escribir "lower.tail = FALSE". 
+
+(a) $F_{0.05,5,8}$= 3.69
+```{r}
+qf(0.05,5,8,lower.tail = FALSE)
+```
+Valor estadistico para el cual la probabilidad $\alpha$ es 0.05 y $\nu_1$ es 5 y $\nu_2$ es 8, es decir, muestras de tamaño 6 y 9.
+
+
+
+(b) $F_{0.05,8,5}$= 4.82
+```{r}
+qf(0.05,8,5,lower.tail = FALSE)
+```
+Valor estadistico para el cual la probabilidad $\alpha$ es 0.05 y $\nu_1$ es 8 y $\nu_2$ es 5, es decir, muestras de tamaño 9 y 6.
+
+
+(c) $F_{0.95,5,8}$
+```{r}
+qf(0.95,5,8,lower.tail = FALSE)
+```
+
+Valor estadistico para el cual la probabilidad $\alpha$ es 0.95 y $\nu_1$ es 5 y $\nu_2$ es 8, es decir, muestras de tamaño 6 y 9.
+
+(d) $F_{0.95,8,5}$
+```{r}
+qf(0.95,8,5,lower.tail = FALSE)
+```
+
+
+(e) El 99 percentil de F con $\nu_{1}$=10 y $\nu_{2}$  =>$F_{0.99,10,12}$
+```{r}
+qf(0.99,10,12,lower.tail = FALSE)
+```
+Valor estadistico para el cual la probabilidad $\alpha$ es 0.99 y $\nu_1$ es 10 y $\nu_2$ es 12, es decir, muestras de tamaño 11 y 13.
+
+
+(f) El 1 percentil de F con $\nu_{1}$=10 y $\nu_{2}$   =>$F_{0.01,10,12}$
+```{r}
+qf(0.01,10,12,lower.tail = FALSE)
+```
+Valor estadistico para el cual la probabilidad $\alpha$ es 0.01 y $\nu_1$ es 10 y $\nu_2$ es 12, es decir, muestras de tamaño 10 y 13.
+
+
+# 58 Give as much information as you can about the P-value of the F tests is each of the following situations
+
+Se calcula el valor P para la muestra de tamaños $\nu_{1}+1$ y $\nu_{2}+1$ y quantil f, mediante la instrucción:
+
+#```{r}
+#pf(q,df1,df2,ncp,lower.tail = FALSE)
+#```
+
+
+(a) $\nu_{1}$=5 y $\nu_{2}=10$, upper-tailed test, f=4.75
+
+=> $P(F>f_{x,5,10})=\int_{F_{x,5,10}}^{\infty}f(f)df$=x
+
+Se calcula el valor P para la muestra de tamaños $\nu_{1}+1=6$ y $\nu_{2}+1=11$ y cuantil f=4.75:
+
+```{r}
+pf(4.75,5,10,lower.tail = FALSE)
+```
+
+
+
+(b) $\nu_{1}$=5 y $\nu_{2}=10$, upper-tailed test, f=2.00
+
+=> $P(F>f_{x,5,10})=\int_{F_{x,5,10}}^{\infty}f(f)df$=x
+
+Se calcula el valor P para la muestra de tamaños $\nu_{1}+1=6$ y $\nu_{2}+1=11$ y quantil f=2:
+
+```{r}
+pf(2,5,10,lower.tail = FALSE)
+```
+
+
+(c) $\nu_{1}$=5 y $\nu_{2}=10$, two-tailed test, f=5.64
+
+=> $P(F>f_{x,5,10})=\int_{F_{x,5,10}}^{\infty}f(f)df=x$ 
+
+Se calcula el valor P para la muestra de tamaños $\nu_{1}+1=6$ y $\nu_{2}+1=11$ y quantil f=5.64:
+
+```{r}
+pf(5.64,5,10,lower.tail = FALSE)
+```
+(d) $\nu_{1}$=5 y $\nu_{2}=10$, lower test, f=0.200
+
+$P(F>f_{x,5,10})=\int_{F_{x,5,10}}^{\infty}f(f)df=x$ 
+
+Se calcula el valor P para la muestra de tamaños $\nu_{1}+1=6$ y $\nu_{2}+1=11$ y quantil f=0.200, 
+
+```{r}
+pf(0.2,5,10,lower.tail = TRUE)
+```
+(e) $\nu_{1}$=5 y $\nu_{2}=10$, upper taildes test, f=3.24
+
+$P(F>f_{x,5,10})=\int_{F_{x,5,10}}^{\infty}f(f)df=x$ 
+
+Se calcula el valor P para la muestra de tamaños $\nu_{1}+1=6$ y $\nu_{2}+1=11$ y quantil f=3.24, 
+
+```{r}
+pf(3.24,5,10,lower.tail = FALSE)
+```
